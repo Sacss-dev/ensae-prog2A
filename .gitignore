@@ -1,0 +1,19 @@
+# Données : jamais dans Git (copie brute sur le S3 du SSP Cloud)
+data/
+*.parquet
+*.csv
+*.zip
+
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Système
+.DS_Store
