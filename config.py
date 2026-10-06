@@ -4,28 +4,48 @@ Toutes les valeurs du projet qui pourraient changer sont réunies ici,
 pour ne jamais les écrire en dur dans le code de src/.
 """
 
-# --- Sources de données (à vérifier à l'étape 1) ---
+# --- Sources de données (vérifiées à l'étape 1, octobre 2026) ---
 
-# API OpenDataSoft du BODACC, jeu des annonces commerciales
+# API OpenDataSoft du BODACC, jeu des annonces commerciales.
+# "records" renvoie au plus 10 000 résultats (offset + limit) ;
+# "exports" renvoie tout le résultat filtré d'un coup, sans cette limite.
 URL_BODACC = (
     "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1"
     "/catalog/datasets/annonces-commerciales/records"
 )
+URL_BODACC_EXPORT_PARQUET = (
+    "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1"
+    "/catalog/datasets/annonces-commerciales/exports/parquet"
+)
 
-# Données financières détaillées INPI (Signaux Faibles), parquet sur data.gouv.fr
-URL_BILANS_INPI = None  # À trouver à l'étape 1
+# Données financières détaillées INPI (Signaux Faibles), parquet de 2,8 Go.
+# Lien stable data.gouv.fr : il redirige toujours vers la dernière version.
+URL_BILANS_INPI = (
+    "https://www.data.gouv.fr/api/1/datasets/r/c4ac8f98-2c97-4417-9070-0cbb9de03875"
+)
 
-# Ratios financiers BCE/INPI sur data.economie.gouv.fr
+# Ratios financiers BCE/INPI par entreprise, sur data.economie.gouv.fr
 URL_RATIOS_BCE_INPI = (
     "https://data.economie.gouv.fr/api/explore/v2.1"
     "/catalog/datasets/ratios_inpi_bce/records"
 )
 
-# Stock SIRENE des unités légales, parquet sur data.gouv.fr
-URL_SIRENE = (
-    "https://object.files.data.gouv.fr/data-pipeline-open"
-    "/siren/stock/StockUniteLegale_utf8.parquet"
+# Percentiles sectoriels des ratios (par classe NAF, tranche de CA et exercice)
+URL_RATIOS_SECTORIELS = (
+    "https://data.economie.gouv.fr/api/explore/v2.1"
+    "/catalog/datasets/ratios_inpi_bce_sectors/records"
 )
+
+# Stock SIRENE des unités légales, parquet de 700 Mo.
+# Lien stable data.gouv.fr (le fichier daté change chaque mois).
+URL_SIRENE = (
+    "https://www.data.gouv.fr/api/1/datasets/r/350182c9-148a-46e0-8389-76c2ec1374a3"
+)
+
+# API BDM de l'INSEE (accès libre, sans clé), réponse au format XML
+URL_INSEE_BDM = "https://api.insee.fr/series/BDM/data/SERIES_BDM/"
+# Série trimestrielle : défaillances d'entreprises par date de jugement, France
+IDBANK_DEFAILLANCES = "001656164"
 
 # --- Stockage S3 du SSP Cloud ---
 
