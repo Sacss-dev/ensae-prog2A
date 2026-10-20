@@ -42,16 +42,40 @@ URL_SIRENE = (
     "https://www.data.gouv.fr/api/1/datasets/r/350182c9-148a-46e0-8389-76c2ec1374a3"
 )
 
+# Stock SIRENE des établissements, parquet de 2,2 Go (44 millions de lignes).
+# Contient la commune (codeCommuneEtablissement) ; etablissementSiege repère le siège.
+URL_SIRENE_ETABLISSEMENTS = (
+    "https://www.data.gouv.fr/api/1/datasets/r/a29c1297-1f92-4e2a-8f6b-8c902ce96c5f"
+)
+
 # API BDM de l'INSEE (accès libre, sans clé), réponse au format XML
 URL_INSEE_BDM = "https://api.insee.fr/series/BDM/data/SERIES_BDM/"
 # Série trimestrielle : défaillances d'entreprises par date de jugement, France
 IDBANK_DEFAILLANCES = "001656164"
 
-# --- Stockage S3 du SSP Cloud ---
+# --- Stockage S3 du SSP Cloud (option A : chacun son bucket) ---
 
-# Nom du bucket (identifiant SSP Cloud du membre qui héberge les données)
-BUCKET_S3 = "a-completer"
-DOSSIER_S3 = "faillites-signaux"
+# Un bucket porte le nom de l'identifiant SSP Cloud de son propriétaire.
+# On ne peut écrire que dans son propre bucket : chacun y range les données
+# qu'il collecte. Lignes volontairement séparées : chacun modifie la sienne
+# sans créer de conflit Git avec les autres.
+
+BUCKET_LUCAS = "poignantlucas20"  # étape 2 : BODACC
+
+BUCKET_OLIVIER = "a-completer"  # étape 3 : bilans INPI
+
+BUCKET_CLAUDIA = "a-completer"  # étape 4 : SIRENE et contexte
+
+# Le dossier diffusion/ d'un bucket est lisible par les autres utilisateurs
+# du SSP Cloud (camarades, correcteur), sans clé, via URL_PUBLIQUE_S3.
+DOSSIER_PROJET = "diffusion/faillites-signaux"
+URL_PUBLIQUE_S3 = "https://minio.lab.sspcloud.fr"
+
+# Chemins des données brutes sur S3 : "bucket/dossier/fichier"
+CHEMIN_S3_BODACC = f"{BUCKET_LUCAS}/{DOSSIER_PROJET}/bodacc"
+CHEMIN_S3_BILANS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/bilans_inpi"
+CHEMIN_S3_SIRENE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/sirene"
+CHEMIN_S3_CONTEXTE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/contexte"
 
 # --- Période d'étude (décision des étudiants, après l'étape 1) ---
 

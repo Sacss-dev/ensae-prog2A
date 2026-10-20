@@ -8,14 +8,13 @@ Lancement, depuis la racine du dépôt :
 """
 
 import io
-import os
 
 import duckdb
 import pandas as pd
 import requests
-import s3fs
 
 import config
+from src.collecte.stockage_s3 import ouvrir_connexion_s3
 
 TAILLE_ECHANTILLON = 20  # nombre de lignes (ou de SIREN) demandées à chaque source
 DELAI_MAX = 60  # secondes avant d'abandonner une requête HTTP
@@ -135,23 +134,41 @@ def tester_contexte_insee():
     print(df_serie[["TIME_PERIOD", "OBS_VALUE"]].to_string(index=False))
 
 
-def tester_acces_s3():
-    """Écrit, relit puis supprime un petit fichier sur le S3 du SSP Cloud."""
-    if config.BUCKET_S3 == "a-completer":
-        raise ValueError("BUCKET_S3 n'est pas encore renseigné dans config.py")
-    if "AWS_S3_ENDPOINT" not in os.environ:
-        raise ValueError("variables S3 absentes : ce test ne tourne que sur le SSP Cloud")
-    # s3fs lit seul les clés AWS_ACCESS_KEY_ID, etc. dans les variables d'environnement
-    stockage = s3fs.S3FileSystem(
-        client_kwargs={"endpoint_url": "https://" + os.environ["AWS_S3_ENDPOINT"]}
-    )
-    chemin = f"{config.BUCKET_S3}/{config.DOSSIER_S3}/test_acces.txt"
-    with stockage.open(chemin, "w") as fichier:
-        fichier.write("test")
-    with stockage.open(chemin, "r") as fichier:
-        contenu = fichier.read()
+def tester_un_bucket(stockage, bucket):
+    """Écrit un fichier test dans le dossier diffusion/ d'un bucket, le relit sans clé, puis l'efface.
+
+    Entrées : la connexion S3 et le nom du bucket.
+    Sortie : True si l'écriture et la lecture publique réussissent, False sinon.
+    """
+    chemin = f"{bucket}/{config.DOSSIER_PROJET}/test_acces.txt"
+    try:
+        with stockage.open(chemin, "w") as fichier:
+            fichier.write("test")
+    except Exception:  # cas normal pour le bucket d'un camarade
+        print(f"  {bucket} : écriture refusée (normal si ce n'est pas votre bucket)")
+        return False
+    # Relecture par une simple adresse web, sans clé, comme le ferait le correcteur
+    reponse = requests.get(f"{config.URL_PUBLIQUE_S3}/{chemin}", timeout=DELAI_MAX)
     stockage.rm(chemin)  # on ne laisse pas traîner le fichier de test
-    print(f"  S3 : écriture et relecture réussies ({contenu!r}) dans {chemin}")
+    if reponse.status_code != 200:
+        print(f"  {bucket} : écriture OK, mais lecture publique refusée (code {reponse.status_code})")
+        return False
+    print(f"  {bucket} : écriture OK et lecture publique OK")
+    return True
+
+
+def tester_acces_s3():
+    """Teste chaque bucket du groupe : seul le sien doit accepter l'écriture."""
+    stockage = ouvrir_connexion_s3()
+    buckets = [config.BUCKET_LUCAS, config.BUCKET_OLIVIER, config.BUCKET_CLAUDIA]
+    nb_reussites = 0
+    for bucket in buckets:
+        if bucket == "a-completer":
+            print("  un identifiant n'est pas encore renseigné dans config.py")
+        elif tester_un_bucket(stockage, bucket):
+            nb_reussites = nb_reussites + 1
+    if nb_reussites == 0:
+        raise ValueError("aucun bucket accessible en écriture et en lecture publique")
 
 
 def extraire_siren_bodacc(df_annonces, nombre):
