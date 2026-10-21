@@ -4,9 +4,11 @@ Fonctions communes aux trois collectes (BODACC, bilans INPI, SIRENE).
 Les chemins S3 sont définis dans config.py.
 """
 
+import io
 import os
 
 import pandas as pd
+import requests
 import s3fs
 
 import config
@@ -45,4 +47,8 @@ def lire_parquet_s3(chemin_s3):
     et pour le correcteur, puisque le dossier diffusion/ est en lecture publique.
     """
     url = f"{config.URL_PUBLIQUE_S3}/{chemin_s3}"
-    return pd.read_parquet(url)
+    # requests plutôt que pd.read_parquet(url) : requests apporte ses propres
+    # certificats https, qui manquent parfois à Python sur Mac
+    reponse = requests.get(url, timeout=600)
+    reponse.raise_for_status()  # erreur explicite si le fichier est absent ou privé
+    return pd.read_parquet(io.BytesIO(reponse.content))

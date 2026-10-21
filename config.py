@@ -79,8 +79,17 @@ CHEMIN_S3_CONTEXTE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/contexte"
 
 # --- Période d'étude (décision des étudiants, après l'étape 1) ---
 
-ANNEE_DEBUT_JUGEMENTS = None  # À décider après l'étape 1
-ANNEE_FIN_JUGEMENTS = None  # À décider après l'étape 1
+ANNEE_DEBUT_JUGEMENTS = None  # À décider avant l'étape 5
+ANNEE_FIN_JUGEMENTS = None  # À décider avant l'étape 5
+
+# --- Années de collecte (plus larges que la période d'étude) ---
+
+# BODACC, années de parution des annonces. On collecte large pour ne pas
+# trancher trop tôt la période d'étude :
+# - avant 2020 : repérer les entreprises déjà en procédure (premier jugement) ;
+# - 2025 : les jugements de fin 2024 sont souvent publiés début 2025.
+ANNEE_DEBUT_COLLECTE_BODACC = 2017
+ANNEE_FIN_COLLECTE_BODACC = 2025
 
 # --- Seuils et paramètres d'analyse ---
 
