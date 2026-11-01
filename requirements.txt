@@ -1,0 +1,8 @@
+pandas
+pyarrow
+duckdb
+requests
+s3fs
+matplotlib
+seaborn
+nb-clean
