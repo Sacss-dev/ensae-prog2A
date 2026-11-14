@@ -185,7 +185,9 @@ def compter_siren_presents(url, liste_siren):
         FROM read_parquet('{url}')
         WHERE siren IN ({liste_sql})
     """
-    return connexion.sql(requete).fetchone()[0]
+    # fetchall() renvoie [(nombre,)] : [0][0] prend la seule valeur.
+    # (fetchone() n'existe plus sur ce type d'objet dans les versions récentes de DuckDB)
+    return connexion.sql(requete).fetchall()[0][0]
 
 
 def verifier_siren_communs():
