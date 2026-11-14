@@ -9,12 +9,11 @@ Lancement, depuis la racine du dépôt :
 
 import io
 
-import duckdb
 import pandas as pd
 import requests
 
 import config
-from src.collecte.stockage_s3 import ouvrir_connexion_s3
+from src.collecte.stockage_s3 import ouvrir_connexion_duckdb, ouvrir_connexion_s3
 
 TAILLE_ECHANTILLON = 20  # nombre de lignes (ou de SIREN) demandées à chaque source
 DELAI_MAX = 60  # secondes avant d'abandonner une requête HTTP
@@ -75,15 +74,6 @@ def tester_ratios_sectoriels():
     reponse = interroger_api_opendatasoft(config.URL_RATIOS_SECTORIELS, {"limit": TAILLE_ECHANTILLON})
     print(f"  Ratios sectoriels : {reponse['total_count']} lignes au total")
     afficher_resume("Ratios sectoriels", pd.DataFrame(reponse["results"]))
-
-
-def ouvrir_connexion_duckdb():
-    """Ouvre une connexion DuckDB capable de lire des fichiers parquet sur Internet."""
-    connexion = duckdb.connect()
-    # httpfs : extension qui lit un fichier en ligne par morceaux, sans le télécharger en entier
-    connexion.sql("INSTALL httpfs")
-    connexion.sql("LOAD httpfs")
-    return connexion
 
 
 def lire_echantillon_parquet(url):
