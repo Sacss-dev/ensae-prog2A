@@ -91,6 +91,48 @@ ANNEE_FIN_JUGEMENTS = None  # À décider avant l'étape 5
 ANNEE_DEBUT_COLLECTE_BODACC = 2017
 ANNEE_FIN_COLLECTE_BODACC = 2025
 
+# Bilans INPI, années de clôture des exercices. Pour un jugement début 2020,
+# le bilan N-4 peut dater de 2015 ; on filtrera à l'étape 5.
+ANNEE_DEBUT_COLLECTE_BILANS = 2015
+ANNEE_FIN_COLLECTE_BILANS = 2025
+
+# --- Postes de liasse extraits des bilans INPI (étape 3) ---
+
+# Liste provisoire, à valider avec Lucas avant l'étape 5.
+# Les bilans complets (C) et simplifiés (S) n'utilisent pas les mêmes codes :
+# l'harmonisation entre les deux se fait à l'étape 5.
+CODES_LIASSE_C = [
+    "FL",  # chiffre d'affaires net
+    "FR",  # total des produits d'exploitation
+    "GG",  # résultat d'exploitation
+    "HN",  # résultat net (bénéfice ou perte)
+    "DL",  # capitaux propres
+    "EE",  # total du bilan (passif)
+    "EC",  # total des dettes
+    "DU",  # emprunts auprès des établissements de crédit
+    "CF",  # disponibilités
+    "GA",  # dotations aux amortissements
+    "FY",  # salaires et traitements
+    "FZ",  # charges sociales
+]
+CODES_LIASSE_S = [
+    "210",  # ventes de marchandises
+    "214",  # production vendue de biens
+    "218",  # production vendue de services
+    "232",  # total des produits d'exploitation
+    "270",  # résultat d'exploitation
+    "310",  # résultat net (bénéfice ou perte)
+    "142",  # capitaux propres
+    "180",  # total du bilan (passif)
+    "176",  # total des dettes
+    "156",  # emprunts et dettes assimilées
+    # Pas de code pour les disponibilités : les bilans S du fichier ne donnent,
+    # à l'actif, que les totaux (110, 112, 110-112).
+    "254",  # dotations aux amortissements
+    "250",  # rémunérations du personnel
+    "252",  # charges sociales
+]
+
 # --- Seuils et paramètres d'analyse ---
 
 # Winsorisation des ratios aux 1er et 99e percentiles
