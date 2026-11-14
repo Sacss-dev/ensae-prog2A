@@ -62,7 +62,7 @@ IDBANK_DEFAILLANCES = "001656164"
 
 BUCKET_LUCAS = "poignantlucas20"  # étape 2 : BODACC
 
-BUCKET_OLIVIER = "a-completer"  # étape 3 : bilans INPI
+BUCKET_OLIVIER = "ocaffier"  # étape 3 : bilans INPI
 
 BUCKET_CLAUDIA = "a-completer"  # étape 4 : SIRENE et contexte
 
