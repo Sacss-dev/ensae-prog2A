@@ -28,6 +28,19 @@ def lire_bilans_bruts():
     return lire_parquet_s3(config.CHEMIN_S3_BILANS + "/bilans.parquet")
 
 
+def convertir_postes_en_decimaux(df_bilans):
+    """Convertit les colonnes poste_<code> en nombres décimaux (float64).
+
+    Selon la version de pandas, les postes sont lus en entiers Int32 avec valeurs
+    manquantes : additionner ces colonnes donne des Int64, que pandas refuse ensuite
+    de mélanger avec des Int32. En float64, un poste absent vaut simplement NaN.
+    """
+    for colonne in df_bilans.columns:
+        if colonne.startswith("poste_"):
+            df_bilans[colonne] = df_bilans[colonne].astype("float64")
+    return df_bilans
+
+
 def filtrer_bilans(df_bilans):
     """Garde les types de bilan retenus et un seul bilan par entreprise et par année.
 
@@ -144,6 +157,7 @@ def nettoyer_bilans():
     """Enchaîne toutes les étapes du nettoyage, enregistre le résultat sur S3 et l'affiche."""
     df_bilans = lire_bilans_bruts()
     print(f"Bilans bruts : {len(df_bilans)}")
+    df_bilans = convertir_postes_en_decimaux(df_bilans)
     df_bilans = filtrer_bilans(df_bilans)
     print(f"Après filtres (types {config.TYPES_BILAN_GARDES}, un bilan par an) : {len(df_bilans)}")
     df_bilans = ajouter_statut_comptes(df_bilans)
