@@ -78,6 +78,9 @@ CHEMIN_S3_BILANS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/bilans_inpi"
 CHEMIN_S3_SIRENE = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/sirene"
 CHEMIN_S3_CONTEXTE = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/contexte"
 
+# Données nettoyées (étape 5) : bilans harmonisés avec leurs ratios
+CHEMIN_S3_BILANS_RATIOS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/bilans_ratios"
+
 # --- Période d'étude (décision des étudiants, après l'étape 1) ---
 
 ANNEE_DEBUT_JUGEMENTS = None  # À décider avant l'étape 5
@@ -167,6 +170,43 @@ SECTIONS_NAF = [
     ("T", 97, 98, "Activités des ménages"),
     ("U", 99, 99, "Activités extra-territoriales"),
 ]
+
+# --- Nettoyage des bilans (étape 5) ---
+
+# Types de bilan gardés : complet (C) et simplifié (S). Les bilans consolidés (K)
+# décrivent un groupe entier : les garder ferait compter deux fois les mêmes entreprises.
+TYPES_BILAN_GARDES = ["C", "S"]
+
+# Statut des comptes, regroupé en deux modalités (partie 5 : silence comptable)
+STATUTS_COMPTES = {
+    "Public": "public",
+    "Publication simplifiee": "public",
+    "Partiellement confidentiel": "confidentiel",
+    "Partiellement confidentiel (RAPCAC)": "confidentiel",
+}
+
+# Codes de détail pour lesquels une valeur absente d'un compte public vaut 0
+# (pas d'emprunt, pas de salarié...). Les totaux absents restent NULL (inconnus).
+CODES_ABSENTS_A_ZERO = [
+    "DU", "CF", "GA", "FY", "FZ",  # bilans C
+    "210", "214", "218", "156", "254", "250", "252",  # bilans S
+]
+
+# Passage des codes de liasse à un poste commun aux bilans C et S.
+# Format : nom du poste -> (codes C à additionner, codes S à additionner)
+CORRESPONDANCE_POSTES = {
+    "chiffre_affaires": (["FL"], ["210", "214", "218"]),
+    "produits_exploitation": (["FR"], ["232"]),
+    "resultat_exploitation": (["GG"], ["270"]),
+    "resultat_net": (["HN"], ["310"]),
+    "capitaux_propres": (["DL"], ["142"]),
+    "total_bilan": (["EE"], ["180"]),
+    "dettes_totales": (["EC"], ["176"]),
+    "emprunts": (["DU"], ["156"]),
+    "disponibilites": (["CF"], []),  # pas de code en S : reste NULL pour les bilans S
+    "dotations_amortissements": (["GA"], ["254"]),
+    "charges_personnel": (["FY", "FZ"], ["250", "252"]),
+}
 
 # --- Seuils et paramètres d'analyse ---
 
