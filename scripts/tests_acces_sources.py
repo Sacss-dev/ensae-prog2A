@@ -13,6 +13,7 @@ import pandas as pd
 import requests
 
 import config
+from src.collecte.contexte import telecharger_serie_insee
 from src.collecte.stockage_s3 import ouvrir_connexion_duckdb, ouvrir_connexion_s3
 
 TAILLE_ECHANTILLON = 20  # nombre de lignes (ou de SIREN) demandées à chaque source
@@ -115,13 +116,9 @@ def tester_sirene():
 
 def tester_contexte_insee():
     """Teste l'API BDM de l'INSEE sur la série trimestrielle des défaillances."""
-    url = config.URL_INSEE_BDM + config.IDBANK_DEFAILLANCES
-    reponse = requests.get(url, params={"lastNObservations": 8}, timeout=DELAI_MAX)
-    reponse.raise_for_status()
-    # Réponse en XML : chaque balise <Obs> est une observation (un trimestre)
-    df_serie = pd.read_xml(io.StringIO(reponse.text), xpath=".//Obs", parser="etree")
+    df_serie = telecharger_serie_insee(config.IDBANK_DEFAILLANCES, nombre_observations=8)
     afficher_resume("INSEE, défaillances trimestrielles", df_serie)
-    print(df_serie[["TIME_PERIOD", "OBS_VALUE"]].to_string(index=False))
+    print(df_serie.to_string(index=False))
 
 
 def tester_un_bucket(stockage, bucket):
