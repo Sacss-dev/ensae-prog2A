@@ -122,7 +122,7 @@ Chaque étape indique : l'objectif, ce qu'il faut produire, le critère de valid
 - Sauvegarde de l'extrait sur S3.
 - **Validation** : nombre de SIREN et de bilans par année et par type de bilan (C/S/K).
 
-### Étape 4 – Collecte SIRENE et contexte (C)
+### Étape 4 – Collecte SIRENE et contexte (B, réattribuée à Olivier par le groupe)
 
 - Extraction DuckDB des variables utiles du stock SIRENE.
 - Récupération de la série nationale des défaillances pour l'introduction.

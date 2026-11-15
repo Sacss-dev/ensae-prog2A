@@ -64,7 +64,7 @@ BUCKET_LUCAS = "poignantlucas20"  # étape 2 : BODACC
 
 BUCKET_OLIVIER = "ocaffier"  # étape 3 : bilans INPI
 
-BUCKET_CLAUDIA = "a-completer"  # étape 4 : SIRENE et contexte
+BUCKET_CLAUDIA = "a-completer"  # étapes 6, 9 et 13
 
 # Le dossier diffusion/ d'un bucket est lisible par les autres utilisateurs
 # du SSP Cloud (camarades, correcteur), sans clé, via URL_PUBLIQUE_S3.
@@ -74,8 +74,9 @@ URL_PUBLIQUE_S3 = "https://minio.lab.sspcloud.fr"
 # Chemins des données brutes sur S3 : "bucket/dossier/fichier"
 CHEMIN_S3_BODACC = f"{BUCKET_LUCAS}/{DOSSIER_PROJET}/bodacc"
 CHEMIN_S3_BILANS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/bilans_inpi"
-CHEMIN_S3_SIRENE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/sirene"
-CHEMIN_S3_CONTEXTE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/contexte"
+# Étape 4 réattribuée à Olivier : SIRENE et contexte sont dans son bucket
+CHEMIN_S3_SIRENE = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/sirene"
+CHEMIN_S3_CONTEXTE = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/contexte"
 
 # --- Période d'étude (décision des étudiants, après l'étape 1) ---
 
@@ -131,6 +132,40 @@ CODES_LIASSE_S = [
     "254",  # dotations aux amortissements
     "250",  # rémunérations du personnel
     "252",  # charges sociales
+]
+
+# --- Collecte SIRENE (étape 4) ---
+
+# On garde les unités légales actives et celles cessées depuis cette date :
+# une entreprise défaillante est souvent cessée aujourd'hui, il ne faut pas l'exclure.
+DATE_MIN_CESSATION_SIRENE = "2015-01-01"
+
+# Sections de la NAF rév. 2 (A à U) : chaque section regroupe des divisions,
+# c'est-à-dire les 2 premiers chiffres du code NAF (47.11F -> division 47 -> section G).
+# Source : nomenclature NAF rév. 2 de l'INSEE.
+# Format : (section, première division, dernière division, libellé court)
+SECTIONS_NAF = [
+    ("A", 1, 3, "Agriculture, sylviculture et pêche"),
+    ("B", 5, 9, "Industries extractives"),
+    ("C", 10, 33, "Industrie manufacturière"),
+    ("D", 35, 35, "Électricité, gaz, vapeur et air conditionné"),
+    ("E", 36, 39, "Eau, assainissement, déchets et dépollution"),
+    ("F", 41, 43, "Construction"),
+    ("G", 45, 47, "Commerce, réparation d'automobiles et de motocycles"),
+    ("H", 49, 53, "Transports et entreposage"),
+    ("I", 55, 56, "Hébergement et restauration"),
+    ("J", 58, 63, "Information et communication"),
+    ("K", 64, 66, "Activités financières et d'assurance"),
+    ("L", 68, 68, "Activités immobilières"),
+    ("M", 69, 75, "Activités spécialisées, scientifiques et techniques"),
+    ("N", 77, 82, "Services administratifs et de soutien"),
+    ("O", 84, 84, "Administration publique"),
+    ("P", 85, 85, "Enseignement"),
+    ("Q", 86, 88, "Santé humaine et action sociale"),
+    ("R", 90, 93, "Arts, spectacles et activités récréatives"),
+    ("S", 94, 96, "Autres activités de services"),
+    ("T", 97, 98, "Activités des ménages"),
+    ("U", 99, 99, "Activités extra-territoriales"),
 ]
 
 # --- Seuils et paramètres d'analyse ---
