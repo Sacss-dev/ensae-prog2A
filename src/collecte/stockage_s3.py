@@ -7,6 +7,7 @@ Les chemins S3 sont définis dans config.py.
 import io
 import os
 
+import duckdb
 import pandas as pd
 import requests
 import s3fs
@@ -52,3 +53,15 @@ def lire_parquet_s3(chemin_s3):
     reponse = requests.get(url, timeout=600)
     reponse.raise_for_status()  # erreur explicite si le fichier est absent ou privé
     return pd.read_parquet(io.BytesIO(reponse.content))
+
+
+def ouvrir_connexion_duckdb():
+    """Ouvre une connexion DuckDB capable de lire des fichiers parquet sur Internet.
+
+    Utilisée par les collectes qui lisent un gros parquet en ligne (bilans INPI, SIRENE).
+    """
+    connexion = duckdb.connect()
+    # httpfs : extension qui lit un fichier en ligne par morceaux, sans le télécharger en entier
+    connexion.sql("INSTALL httpfs")
+    connexion.sql("LOAD httpfs")
+    return connexion
