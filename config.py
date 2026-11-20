@@ -64,7 +64,7 @@ BUCKET_LUCAS = "poignantlucas20"  # étape 2 : BODACC
 
 BUCKET_OLIVIER = "ocaffier"  # étape 3 : bilans INPI
 
-BUCKET_CLAUDIA = "a-completer"  # étapes 6, 9 et 13
+BUCKET_CLAUDIA = "claudia"  # étapes 6, 9 et 13
 
 # Le dossier diffusion/ d'un bucket est lisible par les autres utilisateurs
 # du SSP Cloud (camarades, correcteur), sans clé, via URL_PUBLIQUE_S3.
