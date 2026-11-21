@@ -241,3 +241,24 @@ QUANTILE_HAUT = 0.99
 
 # Graine du tirage aléatoire des témoins (reproductibilité)
 GRAINE_ALEATOIRE = 2026
+
+
+# --- Base d'analyse et témoins (étape 6) ---
+# Résultats de l'étape 6 : base des défaillantes et témoins, dans le bucket de Claudia
+CHEMIN_S3_BASE_ANALYSE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/base_analyse"
+
+# Horizons étudiés : de N-1 (bilan clos dans les 12 mois avant le jugement) à N-4
+HORIZON_MAX = 4
+ 
+# Tranches de taille d'après le total du bilan (en euros), choisies avec les
+# quantiles des défaillantes à N-1 (médiane d'environ 525 k€). Le total du bilan
+# est connu même quand le compte de résultat (donc le CA) est confidentiel.
+SEUILS_TAILLE_BILAN = [100_000, 500_000, 2_000_000]
+LABELS_TAILLE_BILAN = ["moins de 100 k€", "100 k€ à 500 k€", "500 k€ à 2 M€", "plus de 2 M€"]
+# Nombre de témoins tirés pour chaque entreprise défaillante
+NB_TEMOINS_PAR_DEFAILLANTE = 1
+# Période Covid (décision du groupe) : on garde les jugements 2020-2021, repérés par
+# une colonne periode, car les aides (PGE, chômage partiel, reports de charges)
+# ont rendu ces défaillances atypiques. Les graphiques seront refaits par période.
+ANNEE_FIN_PERIODE_COVID = 2021
+LABELS_PERIODE = ["Covid (2020-2021)", "après Covid (2022-2024)"]
