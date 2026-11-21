@@ -287,6 +287,34 @@ QUANTILE_HAUT = 0.99
 GRAINE_ALEATOIRE = 2026
 
 
+# --- Trajectoires des ratios (étape 8) ---
+# Ratios suivis de N-4 à N-1, dans l'ordre des panneaux du graphique central
+RATIOS_TRAJECTOIRES = [
+    "rentabilite_nette",
+    "marge_exploitation",
+    "autonomie_financiere",
+    "taux_endettement",
+    "liquidite",
+    "croissance_ca",
+]
+# Noms lisibles des ratios, pour les titres des graphiques et des tableaux
+LIBELLES_RATIOS = {
+    "rentabilite_nette": "Rentabilité nette (résultat net / CA)",
+    "marge_exploitation": "Marge d'exploitation (résultat d'exploitation / CA)",
+    "autonomie_financiere": "Autonomie financière (capitaux propres / total du bilan)",
+    "taux_endettement": "Taux d'endettement (dettes / total du bilan)",
+    "liquidite": "Liquidité (disponibilités / total du bilan, bilans complets)",
+    "croissance_ca": "Croissance du chiffre d'affaires sur un an",
+}
+# Rangs sectoriels : position (0 à 100) de chaque bilan parmi tous les bilans
+# de la même section NAF et de la même année de clôture (calculés à partir des bilans INPI)
+CHEMIN_S3_RANGS_SECTORIELS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/rangs_sectoriels"
+HORIZONS_RANGS = [1, 2]  # rangs étudiés à N-1 et N-2
+# Seuil de trésorerie quasi nulle : SEUIL_TRESORERIE_FAIBLE (défini à l'étape 11), le même
+# que pour les règles d'alerte, pour que les parties 3 et 6 restent cohérentes.
+SOURCE_GRAPHIQUES = "BODACC, INPI (bilans), INSEE (SIRENE) ; calculs des auteurs"
+
+
 # --- Base d'analyse et témoins (étape 6) ---
 # Résultats de l'étape 6 : base des défaillantes et témoins, dans le bucket de Claudia
 CHEMIN_S3_BASE_ANALYSE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/base_analyse"
