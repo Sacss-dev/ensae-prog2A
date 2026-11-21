@@ -143,20 +143,20 @@ Chaque étape indique : l'objectif, ce qu'il faut produire, le critère de valid
 - Décision à faire prendre aux étudiants : traitement de la période 2020-2021.
 - **Validation** : les étudiants savent expliquer l'appariement et ses limites.
 
-### Étape 7 – Partie 2 : portrait descriptif (B)
+### Étape 7 – Partie 2 : portrait descriptif (A, échangée avec l'étape 8)
 
 - Taux de défaillance par secteur, par âge, par taille ; carte départementale avec `cartiflette` ; répartition des types de procédures.
 - Une fonction de graphique réutilisable dans `src/analyse/graphiques.py`.
 - **Validation** : chaque graphique a un titre, des axes nommés, une source, et **un commentaire rédigé par les étudiants**.
 
-### Étape 8 – Partie 3 : trajectoires (A)
+### Étape 8 – Partie 3 : trajectoires (B, échangée avec l'étape 7)
 
 - Graphique central : médianes et intervalles interquartiles des ratios de N-4 à N-1, défaillantes contre témoins, en petits multiples.
 - Rangs sectoriels à N-1 et N-2 à partir des percentiles sectoriels.
 - Tableau des situations extrêmes (capitaux propres négatifs, trésorerie quasi nulle).
 - **Validation** : les étudiants peuvent dire quel ratio décroche en premier et à quel horizon.
 
-### Étape 9 – Partie 4 : hétérogénéité (C)
+### Étape 9 – Partie 4 : hétérogénéité (B, réattribuée à Olivier par le groupe)
 
 - Réutiliser les fonctions de l'étape 8 en les appliquant par sous-groupe (secteur, taille et âge, type de procédure). Aucune nouvelle logique copiée-collée.
 - **Validation** : un paragraphe d'interprétation par sous-groupe.
