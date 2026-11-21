@@ -315,6 +315,44 @@ HORIZONS_RANGS = [1, 2]  # rangs étudiés à N-1 et N-2
 SOURCE_GRAPHIQUES = "BODACC, INPI (bilans), INSEE (SIRENE) ; calculs des auteurs"
 
 
+# --- Hétérogénéité (étape 9) ---
+# Ratios étudiés par sous-groupe : un par grande famille (rentabilité, solvabilité,
+# liquidité). Liste provisoire, à ajuster selon les ratios qui décrochent le plus (étape 8).
+RATIOS_HETEROGENEITE = ["rentabilite_nette", "autonomie_financiere", "liquidite"]
+
+# Grands secteurs : regroupement des sections NAF selon la nomenclature agrégée
+# de l'INSEE en 10 postes (A10). Les témoins ont la même section que leur défaillante.
+GRANDS_SECTEURS = {
+    "A": "Agriculture",
+    "B": "Industrie", "C": "Industrie", "D": "Industrie", "E": "Industrie",
+    "F": "Construction",
+    "G": "Commerce, transports, hébergement-restauration",
+    "H": "Commerce, transports, hébergement-restauration",
+    "I": "Commerce, transports, hébergement-restauration",
+    "J": "Information et communication",
+    "K": "Finance et assurance",
+    "L": "Immobilier",
+    "M": "Services aux entreprises", "N": "Services aux entreprises",
+    "O": "Administration, enseignement, santé",
+    "P": "Administration, enseignement, santé",
+    "Q": "Administration, enseignement, santé",
+    "R": "Autres services", "S": "Autres services", "T": "Autres services", "U": "Autres services",
+}
+
+# Classes d'âge de la défaillante à la date du jugement (en années révolues)
+BORNES_AGE = [0, 3, 5, 10, float("inf")]
+LABELS_AGE = ["moins de 3 ans", "3 à 5 ans", "5 à 10 ans", "10 ans et plus"]
+
+# Sous-groupes étudiés : nom de colonne -> nom lisible.
+# Chaque témoin est rangé dans le sous-groupe de sa défaillante (comparaison par paire).
+SOUS_GROUPES = {
+    "grand_secteur": "grand secteur",
+    "classe_age": "âge au jugement",
+    "taille_appariement": "taille (total du bilan à l'appariement)",
+    "type_procedure": "type de procédure",
+}
+
+
 # --- Base d'analyse et témoins (étape 6) ---
 # Résultats de l'étape 6 : base des défaillantes et témoins, dans le bucket de Claudia
 CHEMIN_S3_BASE_ANALYSE = f"{BUCKET_CLAUDIA}/{DOSSIER_PROJET}/base_analyse"
