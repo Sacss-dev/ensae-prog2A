@@ -46,7 +46,29 @@ rapport.ipynb    # rapport final
 
 ## Répartition du travail
 
-*À compléter.*
+Chaque étape est faite sur sa propre branche et fusionnée par une pull request.
+
+| Étape | Contenu | Responsable |
+|---|---|---|
+| 0 | Mise en place du dépôt | Lucas |
+| 1 | Tests d'accès aux sources | Lucas |
+| 2 | Collecte BODACC | Lucas |
+| 3 | Collecte des bilans INPI | Olivier |
+| 4 | Collecte SIRENE et série INSEE | Olivier (prévue pour Claudia) |
+| 5 | Nettoyage : bilans et ratios | Olivier |
+| 5 | Nettoyage : jugements BODACC | Lucas |
+| 6 | Base d'analyse et groupe témoin | Claudia |
+| 7 | Portrait descriptif | Lucas (prévue pour Olivier) |
+| 8 | Trajectoires des ratios | Olivier (prévue pour Lucas) |
+| 9 | Hétérogénéité | Claudia |
+| 10 | Silence comptable | Olivier |
+| 11 | Règles d'alerte | Lucas |
+| 12 | Rédaction du rapport | Tous |
+| 13 | Test de reproductibilité | Claudia |
+| 14 | Préparation de la soutenance | Tous |
+
+Les étapes 7 et 8 ont été échangées entre Lucas et Olivier : l'étape 8 a besoin du groupe
+témoin de l'étape 6, alors que l'étape 7 pouvait commencer tout de suite.
 
 ## Usage de l'IA générative
 

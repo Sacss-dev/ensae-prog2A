@@ -233,6 +233,50 @@ FAMILLE_OUVERTURE = "Jugement d'ouverture"
 ANNEE_MIN_JUGEMENT_PLAUSIBLE = 2000
 ANNEE_MAX_JUGEMENT_PLAUSIBLE = ANNEE_FIN_COLLECTE_BODACC
 
+# --- Portrait descriptif (étape 7) ---
+
+# Champ du portrait : les sociétés commerciales (catégorie juridique 5xxx : SARL, SAS, SA...),
+# soit 87 % des défaillances. Les entrepreneurs individuels, les sociétés civiles (SCI...)
+# et les associations, très nombreux dans SIRENE mais presque jamais défaillants,
+# écraseraient les taux et rendraient les secteurs incomparables.
+PREFIXE_CATEGORIE_JURIDIQUE = "5"
+
+# Procédures comptées comme défaillances : définition de l'INSEE et de la Banque de France.
+# Les sauvegardes, ouvertes avant la cessation des paiements, n'en font pas partie.
+TYPES_DEFAILLANCE = ["redressement", "liquidation"]
+
+# Regroupement des tranches d'effectifs SIRENE (code INSEE -> classe de taille).
+# NN = unité non employeuse ou effectif inconnu ; 00 = 0 salarié au 31 décembre.
+GROUPES_EFFECTIFS = {
+    "NN": "0 salarié ou inconnu",
+    "00": "0 salarié ou inconnu",
+    "01": "1 à 9 salariés",
+    "02": "1 à 9 salariés",
+    "03": "1 à 9 salariés",
+    "11": "10 à 49 salariés",
+    "12": "10 à 49 salariés",
+    "21": "50 à 199 salariés",
+    "22": "50 à 199 salariés",
+    "31": "200 salariés et plus",
+    "32": "200 salariés et plus",
+    "41": "200 salariés et plus",
+    "42": "200 salariés et plus",
+    "51": "200 salariés et plus",
+    "52": "200 salariés et plus",
+    "53": "200 salariés et plus",
+}
+ORDRE_GROUPES_EFFECTIFS = [
+    "0 salarié ou inconnu", "1 à 9 salariés", "10 à 49 salariés",
+    "50 à 199 salariés", "200 salariés et plus",
+]
+
+# Effectif minimal d'un groupe (en sociétés-années) pour publier son taux :
+# en dessous, quelques défaillances suffisent à faire varier fortement le taux.
+SEUIL_ENTREPRISES_MIN = 10000
+
+# Millésime du fond de carte des départements (cartiflette)
+ANNEE_FOND_CARTE = 2024
+
 # --- Seuils et paramètres d'analyse ---
 
 # Winsorisation des ratios aux 1er et 99e percentiles
