@@ -60,7 +60,7 @@ Chaque étape est faite sur sa propre branche et fusionnée par une pull request
 | 6 | Base d'analyse et groupe témoin | Claudia |
 | 7 | Portrait descriptif | Lucas (prévue pour Olivier) |
 | 8 | Trajectoires des ratios | Olivier (prévue pour Lucas) |
-| 9 | Hétérogénéité | Claudia |
+| 9 | Hétérogénéité | Olivier (prévue pour Claudia) |
 | 10 | Silence comptable | Olivier |
 | 11 | Règles d'alerte | Lucas |
 | 12 | Rédaction du rapport | Tous |
