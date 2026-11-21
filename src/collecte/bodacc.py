@@ -55,11 +55,14 @@ def collecter_bodacc():
         sauvegarder_parquet_s3(df_annonces, construire_chemin_s3(annee))
 
 
-def lire_bodacc_brut():
-    """Relit depuis S3 (sans clé) toutes les années collectées et les assemble en un DataFrame."""
+def lire_bodacc_brut(colonnes=None):
+    """Relit depuis S3 (sans clé) toutes les années collectées et les assemble en un DataFrame.
+
+    colonnes : liste des colonnes à garder (None = toutes les colonnes).
+    """
     liste_df_annees = []
     for annee in lister_annees_collecte():
-        liste_df_annees.append(lire_parquet_s3(construire_chemin_s3(annee)))
+        liste_df_annees.append(lire_parquet_s3(construire_chemin_s3(annee), colonnes))
     return pd.concat(liste_df_annees, ignore_index=True)
 
 

@@ -41,18 +41,19 @@ def sauvegarder_parquet_s3(df, chemin_s3):
     print(f"Enregistré sur S3 : {chemin_s3} ({len(df)} lignes)")
 
 
-def lire_parquet_s3(chemin_s3):
+def lire_parquet_s3(chemin_s3, colonnes=None):
     """Lit un fichier parquet du dossier diffusion/ d'un bucket, sans clé.
 
     Fonctionne pour le bucket de n'importe quel membre du groupe,
     et pour le correcteur, puisque le dossier diffusion/ est en lecture publique.
+    colonnes : liste des colonnes à garder (None = toutes), pour économiser la mémoire.
     """
     url = f"{config.URL_PUBLIQUE_S3}/{chemin_s3}"
     # requests plutôt que pd.read_parquet(url) : requests apporte ses propres
     # certificats https, qui manquent parfois à Python sur Mac
     reponse = requests.get(url, timeout=600)
     reponse.raise_for_status()  # erreur explicite si le fichier est absent ou privé
-    return pd.read_parquet(io.BytesIO(reponse.content))
+    return pd.read_parquet(io.BytesIO(reponse.content), columns=colonnes)
 
 
 def ouvrir_connexion_duckdb():

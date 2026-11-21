@@ -1,8 +1,8 @@
-pandas
-pyarrow
-duckdb
-requests
-s3fs
-matplotlib
-seaborn
-nb-clean
+pandas==3.0.6
+pyarrow==25.0.1
+duckdb==1.5.6
+requests==2.34.2
+s3fs==2026.9.0
+matplotlib==3.11.2
+seaborn==0.13.2
+nb-clean==4.0.1

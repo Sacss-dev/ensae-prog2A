@@ -80,11 +80,20 @@ CHEMIN_S3_CONTEXTE = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/contexte"
 
 # Données nettoyées (étape 5) : bilans harmonisés avec leurs ratios
 CHEMIN_S3_BILANS_RATIOS = f"{BUCKET_OLIVIER}/{DOSSIER_PROJET}/bilans_ratios"
+# Données nettoyées (étape 5) : premier jugement d'ouverture de chaque SIREN
+CHEMIN_S3_JUGEMENTS = f"{BUCKET_LUCAS}/{DOSSIER_PROJET}/jugements"
 
 # --- Période d'étude (décision des étudiants, après l'étape 1) ---
 
-ANNEE_DEBUT_JUGEMENTS = None  # À décider avant l'étape 5
-ANNEE_FIN_JUGEMENTS = None  # À décider avant l'étape 5
+# Années des jugements d'ouverture étudiés (bornes incluses), filtre appliqué à l'étape 6.
+# - Début 2020 : le bilan N-4 date alors au plus tôt de 2016 (clôtures 2015 presque
+#   absentes du fichier INPI), et on voit 3 ans de BODACC avant (2017-2019) pour
+#   écarter les entreprises déjà en procédure.
+# - Fin 2024 : les jugements de 2025 ne sont pas tous publiés, et leur bilan N-1
+#   (clôture 2024) n'est souvent pas encore déposé.
+# La période Covid (jugements 2020-2021) est gardée ; son traitement se décide à l'étape 6.
+ANNEE_DEBUT_JUGEMENTS = 2020
+ANNEE_FIN_JUGEMENTS = 2024
 
 # --- Années de collecte (plus larges que la période d'étude) ---
 
@@ -207,6 +216,22 @@ CORRESPONDANCE_POSTES = {
     "dotations_amortissements": (["GA"], ["254"]),
     "charges_personnel": (["FY", "FZ"], ["250", "252"]),
 }
+
+# --- Nettoyage du BODACC (étape 5) ---
+
+# Types d'avis gardés : les avis initiaux. Les rectificatifs et les annulations
+# reprennent ou retirent une annonce déjà publiée (risque de double compte).
+TYPES_AVIS_GARDES = ["annonce"]
+
+# Famille de jugement gardée : l'ouverture de la procédure. Les autres familles
+# (conversion en liquidation, clôture, dépôt de l'état des créances...) arrivent
+# après une ouverture : elles ne datent pas le début de la défaillance.
+FAMILLE_OUVERTURE = "Jugement d'ouverture"
+
+# Bornes de plausibilité de la date du jugement : en dehors, c'est une coquille
+# de saisie (par exemple l'année 5202 au lieu de 2025).
+ANNEE_MIN_JUGEMENT_PLAUSIBLE = 2000
+ANNEE_MAX_JUGEMENT_PLAUSIBLE = ANNEE_FIN_COLLECTE_BODACC
 
 # --- Seuils et paramètres d'analyse ---
 
