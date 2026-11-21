@@ -6,6 +6,7 @@ ou l'enregistrer ensuite. Chaque graphique a un titre, des axes nommés et une s
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.ticker import PercentFormatter
 
 # Palette commune à tous les graphiques (couleurs lisibles par les daltoniens)
 COULEUR_PRINCIPALE = "#2a78d6"  # bleu : graphiques à une seule série
@@ -90,3 +91,48 @@ def tracer_carte(gdf, colonne_valeur, titre, titre_legende, source):
     ax.set_title(titre, loc="left", fontsize=12)
     ajouter_source(fig, source)
     return fig, ax
+
+
+def tracer_panneau_trajectoire(ax, df_ratio, titre, en_pourcentage):
+    """Trace, sur un seul panneau, la médiane et l'intervalle interquartile de chaque groupe.
+
+    Entrée : les lignes d'un seul ratio de la sortie de calculer_quartiles
+    (colonnes groupe, horizon, q1, mediane, q3). L'axe va de N-4 (à gauche) à N-1.
+    """
+    liste_groupes = sorted(df_ratio["groupe"].unique())
+    for numero, groupe in enumerate(liste_groupes):
+        df_groupe = df_ratio[df_ratio["groupe"] == groupe].sort_values("horizon")
+        couleur = COULEURS_CATEGORIES[numero]
+        ax.plot(df_groupe["horizon"], df_groupe["mediane"], color=couleur, marker="o", label=groupe)
+        # bande colorée entre le 1er et le 3e quartile : la moitié centrale des entreprises
+        ax.fill_between(df_groupe["horizon"], df_groupe["q1"], df_groupe["q3"], color=couleur, alpha=0.15)
+    ax.set_xticks([4, 3, 2, 1], labels=["N-4", "N-3", "N-2", "N-1"])
+    ax.invert_xaxis()  # le temps s'écoule vers la droite, jusqu'au jugement
+    if en_pourcentage:
+        ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))  # 0,05 s'affiche 5 %
+    ax.set_title(titre, loc="left", fontsize=9)
+    ax.set_xlabel("Exercice avant le jugement")
+    alleger_axes(ax)
+
+
+def tracer_trajectoires(df_quartiles, libelles, titre, source, en_pourcentage=True):
+    """Petits multiples : un panneau par ratio, défaillantes contre témoins, de N-4 à N-1.
+
+    Entrées : la sortie de calculer_quartiles, un dictionnaire ratio -> nom lisible,
+    le titre, la source, et en_pourcentage (False pour des rangs de 0 à 100).
+    Sortie : (fig, axes).
+    """
+    liste_ratios = list(df_quartiles["ratio"].unique())
+    nombre_lignes = (len(liste_ratios) + 2) // 3  # 3 panneaux par ligne, arrondi au-dessus
+    fig, axes = plt.subplots(nombre_lignes, 3, figsize=(14, 4 * nombre_lignes), squeeze=False)
+    liste_axes = axes.flatten()
+    for numero, ratio in enumerate(liste_ratios):
+        df_ratio = df_quartiles[df_quartiles["ratio"] == ratio]
+        tracer_panneau_trajectoire(liste_axes[numero], df_ratio, libelles[ratio], en_pourcentage)
+    for ax_vide in liste_axes[len(liste_ratios):]:
+        ax_vide.set_visible(False)  # panneaux en trop sur la dernière ligne
+    liste_axes[0].legend(frameon=False)
+    fig.suptitle(titre, x=0.01, ha="left", fontsize=13)
+    ajouter_source(fig, source)
+    fig.tight_layout(rect=(0, 0.03, 1, 0.97))
+    return fig, axes
