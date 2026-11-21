@@ -287,6 +287,12 @@ QUANTILE_HAUT = 0.99
 GRAINE_ALEATOIRE = 2026
 
 
+# --- Silence comptable (étape 10) ---
+# Statut des comptes d'une entreprise à un horizon donné, dans l'ordre des graphiques :
+# public, confidentiel (compte de résultat caché) ou absent (aucun bilan à cet horizon)
+ORDRE_STATUTS = ["public", "confidentiel", "absent"]
+
+
 # --- Trajectoires des ratios (étape 8) ---
 # Ratios suivis de N-4 à N-1, dans l'ordre des panneaux du graphique central
 RATIOS_TRAJECTOIRES = [
