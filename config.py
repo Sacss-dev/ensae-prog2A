@@ -334,3 +334,18 @@ NB_TEMOINS_PAR_DEFAILLANTE = 1
 # ont rendu ces défaillances atypiques. Les graphiques seront refaits par période.
 ANNEE_FIN_PERIODE_COVID = 2021
 LABELS_PERIODE = ["Covid (2020-2021)", "après Covid (2022-2024)"]
+
+# --- Règles d'alerte (étape 11) ---
+# Horizons sur lesquels on évalue les règles : N-1 et N-2
+HORIZONS_ALERTE = [1, 2]
+# Trésorerie « quasi nulle » : disponibilités inférieures à 2 % du total du bilan.
+# Le ratio liquidite n'existe que pour les bilans complets (C) : un bilan simplifié
+# n'est jamais signalé par cette règle.
+SEUIL_TRESORERIE_FAIBLE = 0.02
+# Règle combinée : alerte si au moins ce nombre de signaux sur les trois
+# (capitaux propres négatifs, trésorerie quasi nulle, perte nette)
+NB_SIGNAUX_MIN = 2
+# Taux annuel de défaillance des sociétés commerciales, 2020-2024 (étape 7) :
+# 170 264 défaillances pour 18,7 millions de sociétés-années, soit 9,1 pour 1 000.
+# Sert à estimer ce que donneraient les règles sur la population réelle.
+TAUX_DEFAILLANCE_POPULATION = 0.0091
