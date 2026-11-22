@@ -136,3 +136,25 @@ def tracer_trajectoires(df_quartiles, libelles, titre, source, en_pourcentage=Tr
     ajouter_source(fig, source)
     fig.tight_layout(rect=(0, 0.03, 1, 0.97))
     return fig, axes
+
+
+def tracer_courbe(df, colonne_x, colonne_y, titre, titre_axe, source):
+    """Courbe d'une seule série dans le temps. Sortie : (fig, ax)."""
+    fig, ax = plt.subplots(figsize=(10, 4.5))
+    ax.plot(df[colonne_x], df[colonne_y], color=COULEUR_PRINCIPALE, linewidth=1.8)
+    ax.set_title(titre, loc="left", fontsize=12)
+    ax.set_ylabel(titre_axe)
+    ax.set_xlabel("")
+    alleger_axes(ax)
+    ax.grid(axis="y", color=COULEUR_GRILLE, linewidth=0.8)  # grille horizontale : lecture des niveaux
+    ajouter_source(fig, source)
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    return fig, ax
+
+
+def surligner_periode(ax, date_debut, date_fin, libelle):
+    """Grise une période sur l'axe horizontal (par exemple la période Covid) et l'annote."""
+    ax.axvspan(date_debut, date_fin, color=COULEUR_GRILLE, alpha=0.8, zorder=0)
+    # get_xaxis_transform : x en dates, y en part de la hauteur (1.0 = haut du graphique)
+    ax.text(date_debut, 1.0, f" {libelle}", transform=ax.get_xaxis_transform(),
+            va="top", fontsize=9, color=COULEUR_TEXTE_SECONDAIRE)

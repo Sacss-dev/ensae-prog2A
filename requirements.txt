@@ -7,4 +7,5 @@ matplotlib==3.11.2
 seaborn==0.13.2
 geopandas==1.2.0
 cartiflette==0.4.0
+ipywidgets==8.1.9
 nb-clean==4.0.1

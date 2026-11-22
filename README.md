@@ -8,15 +8,19 @@ Les entreprises défaillantes présentent-elles des signaux financiers dégradé
 
 ## Sources de données
 
-*À compléter après l'étape 1.*
+Toutes les données partent de sources publiques ; leurs adresses sont dans `config.py`.
 
-| Source | Contenu | Accès |
-|---|---|---|
-| BODACC | Jugements de procédures collectives | API OpenDataSoft (DILA) |
-| INPI (Signaux Faibles) | Postes de la liasse fiscale | Parquet, data.gouv.fr |
-| Ratios BCE/INPI | Ratios et percentiles sectoriels | data.economie.gouv.fr |
-| SIRENE | Secteur, âge, taille, localisation | Parquet, data.gouv.fr |
-| Banque de France / INSEE | Série nationale des défaillances | API |
+| Source | Contenu utilisé | Accès | Années collectées |
+|---|---|---|---|
+| BODACC, annonces commerciales (DILA) | Jugements de procédures collectives (sauvegarde, redressement, liquidation) | API OpenDataSoft, export parquet | Annonces publiées de 2017 à 2025 |
+| Données financières détaillées INPI (Signaux Faibles) | Postes de la liasse fiscale par SIREN et date de clôture | Parquet sur data.gouv.fr, lu avec DuckDB | Clôtures de 2015 à 2025 |
+| SIRENE, stock des unités légales (INSEE) | Activité (NAF), date de création, effectifs, catégorie juridique | Parquet sur data.gouv.fr, lu avec DuckDB | Stock actuel |
+| SIRENE, stock des établissements (INSEE) | Commune du siège (département) | Parquet sur data.gouv.fr, lu avec DuckDB | Stock actuel |
+| INSEE, Banque de données macroéconomiques | Série trimestrielle des défaillances, par date de jugement (idbank 001656164) | API BDM, sans clé | Série entière (depuis 1990) |
+| Contours des départements | Carte de la partie 2 | `cartiflette` | 2024 |
+
+Les rangs sectoriels (partie 3) sont calculés à partir des bilans INPI eux-mêmes, et non avec l'API des
+ratios sectoriels BCE/INPI testée à l'étape 1 : on garde ainsi les mêmes définitions de ratios partout.
 
 ## Reproduire les résultats
 
@@ -29,19 +33,58 @@ pip install -r requirements.txt
 nb-clean add-filter  # une fois par clone : retire les sorties des notebooks à chaque commit
 ```
 
-Puis ouvrir `rapport.ipynb` et lancer « Restart & Run All ».
+Puis ouvrir `rapport.ipynb` et lancer « Restart & Run All » (environ 3 minutes).
+
+Le rapport relit les résultats intermédiaires enregistrés dans le dossier `diffusion/` des buckets S3 des
+membres du groupe, qui est en lecture publique : il tourne sans aucune clé.
+
+### Refaire toute la chaîne depuis les données brutes
+
+Sur un service SSP Cloud avec au moins 16 Go de mémoire, depuis la racine du dépôt, dans cet ordre.
+Chaque script enregistre son résultat dans le bucket indiqué dans `config.py` (`BUCKET_LUCAS`,
+`BUCKET_OLIVIER`, `BUCKET_CLAUDIA`) : pour refaire la chaîne sur son propre compte, remplacer ces noms
+par son identifiant SSP Cloud, puis rendre le dossier `diffusion/` de son bucket lisible publiquement.
+
+| Ordre | Commande | Étape | Durée indicative |
+|---|---|---|---|
+| 0 | `python -m scripts.tests_acces_sources` | Vérifie l'accès aux sources (facultatif) | 2 min |
+| 1 | `python -m src.collecte.bodacc` | Collecte des annonces BODACC | 5 min |
+| 2 | `python -m src.collecte.bilans` | Extraction des bilans INPI | 10 à 30 min |
+| 3 | `python -m src.collecte.sirene` | Extraction SIRENE (unités légales et sièges) | 5 min |
+| 4 | `python -m src.collecte.contexte` | Série INSEE des défaillances | quelques secondes |
+| 5 | `python -m src.nettoyage.nettoyage_bodacc` | Premier jugement d'ouverture par SIREN | quelques minutes |
+| 6 | `python -m src.nettoyage.ratios` | Nettoyage des bilans et calcul des ratios | quelques minutes |
+| 7 | `python -m src.nettoyage.base_analyse` | Base d'analyse (défaillantes et leurs bilans) | quelques minutes |
+| 8 | `python -m src.analyse.temoins` | Appariement des témoins | quelques minutes |
+| 9 | `python -m src.analyse.trajectoires` | Rangs sectoriels | 2 min |
 
 Les identifiants S3 sont fournis automatiquement par le SSP Cloud sous forme de variables d'environnement : aucun secret n'est écrit dans le code.
 
 ## Organisation du dépôt
 
 ```
-config.py        # URL des sources, période d'étude, seuils
-src/collecte/    # téléchargement des données brutes
-src/nettoyage/   # nettoyage, calcul des ratios, base d'analyse
-src/analyse/     # groupe témoin, graphiques, règles d'alerte
-scripts/         # scripts ponctuels (tests d'accès aux sources)
-rapport.ipynb    # rapport final
+config.py                     # URL des sources, période d'étude, seuils, décisions du groupe
+requirements.txt              # dépendances, versions fixées
+src/collecte/
+    stockage_s3.py            # lecture et écriture sur S3 (fonctions communes)
+    bodacc.py                 # annonces BODACC
+    bilans.py                 # bilans INPI
+    sirene.py                 # SIRENE (unités légales, département du siège, section NAF)
+    contexte.py               # série INSEE des défaillances
+src/nettoyage/
+    nettoyage_bodacc.py       # type et date du premier jugement par SIREN
+    ratios.py                 # nettoyage des bilans, ratios, winsorisation
+    base_analyse.py           # base d'analyse et horizons N-1 à N-4
+src/analyse/
+    temoins.py                # appariement des témoins
+    graphiques.py             # fonctions de graphiques communes
+    portrait.py               # partie 2 : portrait descriptif
+    trajectoires.py           # partie 3 : trajectoires, rangs sectoriels, situations extrêmes
+    heterogeneite.py          # partie 4 : trajectoires par sous-groupe
+    silence_comptable.py      # partie 5 : comptes absents ou confidentiels
+    regles_alerte.py          # partie 6 : règles d'alerte
+scripts/tests_acces_sources.py  # tests d'accès aux sources (étape 1)
+rapport.ipynb                 # rapport final
 ```
 
 ## Répartition du travail
@@ -72,4 +115,5 @@ témoin de l'étape 6, alors que l'étape 7 pouvait commencer tout de suite.
 
 ## Usage de l'IA générative
 
-*À compléter.*
+*À rédiger par les trois membres du groupe : chacun décrit honnêtement son propre usage de Claude Code
+(ce qu'il lui a demandé, ce qu'il a vérifié, modifié ou refusé, et ce qu'il a écrit lui-même).*

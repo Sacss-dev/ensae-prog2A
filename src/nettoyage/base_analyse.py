@@ -18,7 +18,12 @@ import numpy as np
 import pandas as pd
 
 import config
-from src.collecte.stockage_s3 import construire_url_publique, ouvrir_connexion_duckdb, sauvegarder_parquet_s3
+from src.collecte.stockage_s3 import (
+    construire_url_publique,
+    lire_parquet_s3,
+    ouvrir_connexion_duckdb,
+    sauvegarder_parquet_s3,
+)
 from src.nettoyage.ratios import COLONNES_RATIOS
 
 # Nombre moyen de jours dans une année (années bissextiles comprises)
@@ -185,6 +190,16 @@ def construire_entonnoir(nombre_jugements_total, df_defaillantes):
     # Part calculée par rapport aux entreprises jugées pendant la période
     df_entonnoir["part_periode_pct"] = (100 * df_entonnoir["nombre_entreprises"] / len(df_defaillantes)).round(1)
     return df_entonnoir
+
+
+def compter_jugements_total():
+    """Nombre de premiers jugements d'ouverture, toutes années (première ligne de l'entonnoir).
+
+    Relit le fichier de l'étape 5 depuis S3, sans clé : sert au rapport, qui ne relance
+    pas construire_base_analyse.
+    """
+    df_jugements = lire_parquet_s3(config.CHEMIN_S3_JUGEMENTS + "/premiers_jugements.parquet", ["siren"])
+    return len(df_jugements)
 
 
 def compter_par_horizon(df_bilans):
