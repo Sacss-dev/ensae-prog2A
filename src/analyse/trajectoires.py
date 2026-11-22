@@ -22,9 +22,13 @@ from src.collecte.stockage_s3 import (
 )
 
 
-def lire_base_appariee():
-    """Relit depuis S3 (sans clé) la base appariée de l'étape 6 : défaillantes et témoins."""
-    return lire_parquet_s3(config.CHEMIN_S3_BASE_ANALYSE + "/base_appariee.parquet")
+def lire_base_appariee(colonnes=None):
+    """Relit depuis S3 (sans clé) la base appariée de l'étape 6 : défaillantes et témoins.
+
+    colonnes : liste des colonnes à garder (None = toutes), pour économiser la mémoire.
+    Sortie : une ligne par couple (entreprise, horizon), de N-1 à N-4.
+    """
+    return lire_parquet_s3(config.CHEMIN_S3_BASE_ANALYSE + "/base_appariee.parquet", colonnes)
 
 
 def garder_entreprises_completes(df_base):

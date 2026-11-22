@@ -6,7 +6,9 @@ taille et type de procédure. Chaque témoin est rangé dans le sous-groupe de s
 défaillante (siren_defaillante), pour garder la comparaison paire par paire.
 """
 
+import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import display
 
 import config
 from src.analyse.graphiques import tracer_trajectoires
@@ -97,3 +99,14 @@ def tracer_tous_les_sous_groupes(df_base):
         for ratio in config.RATIOS_HETEROGENEITE:
             figures[(colonne_sous_groupe, ratio)] = tracer_par_sous_groupe(df_base, colonne_sous_groupe, ratio)
     return figures
+
+
+def afficher_sous_groupe(df_base, colonne_sous_groupe):
+    """Pour le rapport : affiche, pour chaque ratio étudié, le graphique puis le tableau d'un sous-groupe.
+
+    Évite de recopier la même boucle dans chaque cellule du notebook (une cellule par sous-groupe).
+    """
+    for ratio in config.RATIOS_HETEROGENEITE:
+        tracer_par_sous_groupe(df_base, colonne_sous_groupe, ratio)
+        plt.show()  # affiche le graphique tout de suite, avant son tableau
+        display(resumer_par_sous_groupe(df_base, colonne_sous_groupe, ratio))

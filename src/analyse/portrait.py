@@ -55,20 +55,25 @@ def construire_requete_presences():
     """
 
 
+def construire_requete_defaillances():
+    """Écrit la partie SQL qui liste les défaillances (redressements et liquidations) par année."""
+    types_defaillance = "', '".join(config.TYPES_DEFAILLANCE)  # -> redressement', 'liquidation
+    return f"""
+        SELECT siren, annee_jugement
+        FROM read_parquet('{URL_JUGEMENTS}')
+        WHERE type_procedure IN ('{types_defaillance}')
+    """
+
+
 def construire_requete_comptages():
     """Écrit la requête qui compte sociétés présentes et défaillances par année et par groupe.
 
     Sortie : le texte SQL. Une ligne par combinaison (année, secteur, département,
     tranche d'effectifs, tranche d'âge), avec nb_entreprises et nb_defaillances.
     """
-    types_defaillance = "', '".join(config.TYPES_DEFAILLANCE)  # -> redressement', 'liquidation
     return f"""
         WITH presences AS ({construire_requete_presences()}),
-        defaillances AS (
-            SELECT siren, annee_jugement
-            FROM read_parquet('{URL_JUGEMENTS}')
-            WHERE type_procedure IN ('{types_defaillance}')
-        )
+             defaillances AS ({construire_requete_defaillances()})
         SELECT annee, section_naf, libelle_section, departement, tranche_effectifs,
             CASE
                 WHEN age < 3 THEN '0 à 2 ans'

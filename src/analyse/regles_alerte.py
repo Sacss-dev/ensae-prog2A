@@ -19,7 +19,7 @@ Lancement d'un contrôle rapide, depuis la racine du dépôt :
 import pandas as pd
 
 import config
-from src.collecte.stockage_s3 import lire_parquet_s3
+from src.analyse.trajectoires import lire_base_appariee
 
 # Colonnes de la base appariée utiles aux règles
 COLONNES_UTILES = [
@@ -33,14 +33,6 @@ REGLES = {
     "alerte_tresorerie": f"Trésorerie < {100 * config.SEUIL_TRESORERIE_FAIBLE:.0f} % du total du bilan",
     "alerte_combinee": f"Au moins {config.NB_SIGNAUX_MIN} signaux sur 3",
 }
-
-
-def lire_base_appariee():
-    """Relit depuis S3 (sans clé) la base appariée de l'étape 6 : défaillantes et témoins.
-
-    Sortie : une ligne par couple (entreprise, horizon), de N-1 à N-4.
-    """
-    return lire_parquet_s3(config.CHEMIN_S3_BASE_ANALYSE + "/base_appariee.parquet", colonnes=COLONNES_UTILES)
 
 
 def ajouter_alertes(df_base):
@@ -127,7 +119,7 @@ def calculer_couverture(df_base):
 
 
 if __name__ == "__main__":
-    df_base_test = ajouter_alertes(lire_base_appariee())
+    df_base_test = ajouter_alertes(lire_base_appariee(COLONNES_UTILES))
     print(calculer_couverture(df_base_test).to_string())
     print(tableau_performances(df_base_test).to_string(index=False))
     print(tableau_performances_par_periode(df_base_test).to_string(index=False))

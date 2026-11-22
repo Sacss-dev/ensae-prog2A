@@ -13,7 +13,7 @@ import pandas as pd
 import requests
 
 import config
-from src.collecte.stockage_s3 import sauvegarder_parquet_s3
+from src.collecte.stockage_s3 import lire_parquet_s3, sauvegarder_parquet_s3
 
 DELAI_MAX = 60  # secondes avant d'abandonner la requête
 
@@ -44,6 +44,18 @@ def collecter_contexte():
     sauvegarder_parquet_s3(df_defaillances, config.CHEMIN_S3_CONTEXTE + "/defaillances_insee.parquet")
     premiere, derniere = df_defaillances["periode"].iloc[0], df_defaillances["periode"].iloc[-1]
     print(f"Série INSEE : {len(df_defaillances)} trimestres, de {premiere} à {derniere}")
+    return df_defaillances
+
+
+def lire_serie_defaillances():
+    """Relit depuis S3 (sans clé) la série INSEE des défaillances, pour l'introduction du rapport.
+
+    Ajoute la colonne date (premier jour du trimestre) pour tracer la série dans le temps.
+    """
+    df_defaillances = lire_parquet_s3(config.CHEMIN_S3_CONTEXTE + "/defaillances_insee.parquet")
+    # "2024-Q3" -> trimestre pandas -> date du 1er juillet 2024
+    trimestres = pd.PeriodIndex(df_defaillances["periode"], freq="Q")
+    df_defaillances["date"] = trimestres.to_timestamp()
     return df_defaillances
 
 

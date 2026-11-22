@@ -43,6 +43,7 @@ def sauvegarder_parquet_s3(df, chemin_s3):
 
 def construire_url_publique(chemin_s3):
     """Renvoie l'URL publique (sans clé) d'un fichier du dossier diffusion/ d'un bucket.
+
     Entrée : un chemin "bucket/diffusion/.../fichier.parquet".
     Sortie : une URL lisible par requests ou par DuckDB.
     """
@@ -74,7 +75,3 @@ def ouvrir_connexion_duckdb():
     connexion.sql("INSTALL httpfs")
     connexion.sql("LOAD httpfs")
     return connexion
-
-def construire_url_publique(chemin_s3):
-    """Renvoie l'URL publique (sans clé) d'un fichier du dossier diffusion/ d'un bucket."""
-    return f"{config.URL_PUBLIQUE_S3}/{chemin_s3}"
