@@ -115,5 +115,14 @@ témoin de l'étape 6, alors que l'étape 7 pouvait commencer tout de suite.
 
 ## Usage de l'IA générative
 
-*À rédiger par les trois membres du groupe : chacun décrit honnêtement son propre usage de Claude Code
-(ce qu'il lui a demandé, ce qu'il a vérifié, modifié ou refusé, et ce qu'il a écrit lui-même).*
+### Olivier CAFFIER
+J'ai utilisé Claude Code (Anthropic) tout au long du projet, encadré notamment par le fichier 'Claude.md' placé à la racine du dépôt, qui fixait les règles de travail du groupe.
+
+- **Code.** Le vibe coding n'étant pas autorisé, j'ai surtout utilisé l'I.A pour remettre en question mon utilisation des structures de données (n'étant pas encore très à l'aise je faisais souvent des erreurs ou des opérations trop longues sur des dataframes par exemple). Claude Code a aussi servi à séparer nos espaces en 3 pour qu'on ne s'écrive pas dessus, et a donc réparti les tâches du code, ce qui nous a grandement fait gagner du temps sur la longue. L'I.A nous aidait aussi à bien utiliser github au cas où nous n'arrivions pas à insérer les bonnes commandes dans le terminal etc, et elle écrivait les Pull Request afin que nous y voyions plus clair sur le travail des autres.
+
+- **Écriture du rapport** Au delà de vérifier les chiffres, l'I.A a relu le `rapport.ipynb` en entier pour vérifier les chiffres et remettre en forme le notebook, en synthétisant au maximum nos formulations.
+- **Débogage** La véritable force de Claude Code est qu'il peut lire nos outputs et notre code et nous pointer où se trouve l'erreur, ce gain de productivité s'est réellement fait ressentir.
+
+Toutes les décisions de l'I.A ont dû passer par ma validation, surtout quand elle ré-écrivait ma fonction. 
+
+- **Choix méthodologiques** Nous étions à l'initiative des choix méthodologique et des remises en question de certains résultats (
