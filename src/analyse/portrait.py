@@ -118,7 +118,8 @@ def calculer_taux(df_comptages, variable):
     """Calcule le taux annuel moyen de défaillance pour 1 000 sociétés, selon une variable.
 
     Entrées : le DataFrame de compter_entreprises_et_defaillances et le nom d'une colonne
-    de regroupement (ex. "libelle_section", "tranche_age", "departement").
+    de regroupement (ex. "libelle_section", "tranche_age", "departement"), ou une liste
+    de colonnes pour croiser deux variables (ex. ["groupe_effectifs", "annee"]).
     Sortie : une ligne par modalité, avec nb_entreprises, nb_defaillances et taux_pour_mille.
     Les modalités inconnues (NaN) sont écartées par groupby, et les trop petites
     (moins de config.SEUIL_ENTREPRISES_MIN sociétés-années) par le filtre final.
