@@ -33,7 +33,9 @@ pip install -r requirements.txt
 nb-clean add-filter  # une fois par clone : retire les sorties des notebooks à chaque commit
 ```
 
-Puis ouvrir `rapport.ipynb` et lancer « Restart & Run All » (environ 3 minutes).
+Puis ouvrir `rapport.ipynb` et lancer « Restart & Run All » (environ 3 minutes). La première cellule
+du notebook relance elle-même `pip install -r requirements.txt` : le rapport tourne donc aussi si l'on
+ouvre directement le notebook sans passer par le terminal.
 
 Le rapport relit les résultats intermédiaires enregistrés dans le dossier `diffusion/` des buckets S3 des
 membres du groupe, qui est en lecture publique : il tourne sans aucune clé.
