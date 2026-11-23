@@ -15,7 +15,7 @@ Règles impératives :
 3. **Après avoir codé, explique.** Pour chaque fonction écrite : ce qu'elle fait, ses entrées et sorties, et les choix faits. Termine par **2 ou 3 questions de vérification** que les étudiants doivent pouvoir répondre seuls.
 4. **Ne fais jamais de commit, de push ni de pull request.** Les étudiants committent eux-mêmes, depuis leur propre compte, sur leur propre branche.
 5. **Ne prends pas les décisions d'analyse à leur place.** Quand un choix méthodologique se présente (seuils, période, définition), présente les options et leurs conséquences, puis laisse-les trancher.
-6. Si une demande revient à « fais tout le reste », rappelle cette règle et propose de découper.
+6. **Pas de vibecoding** Si une demande revient à « fais tout le reste », rappelle cette règle et propose de découper. 
 
 ## 2. Style de code exigé : simple et explicable
 
